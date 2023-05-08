@@ -1,0 +1,330 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}blog{% endblock %}
+
+{% block content %}
+    {% include 'blog/nav_bar.html' %}
+    <div class="main">
+        <section class="module-small">
+            <div class="container">
+                {% include 'users/messages.html' %}
+                <div class="row">
+                    <div class="col-sm-4 col-md-3 sidebar">
+                        <div class="widget">
+                            <form role="form" method="get" action="{% url 'search' %}">
+                                <div class="search-box">
+                                    <input class="form-control" type="text" placeholder="Search..." name="q"/>
+                                    <button class="search-btn" type="submit"><i class="fa fa-search"></i></button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">Blog Categories</h5>
+                            <ul class="icon-list">
+                                {% for category in categories %}
+                                    <li><a href="{% url 'category' category.id %}">{{ category.name }}
+                                        - {{ category.category_count }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">Popular Posts</h5>
+                            <ul class="widget-posts">
+                                {% for b in popular_blog %}
+                                    <li class="clearfix">
+                                        <div class="widget-posts-image"><a href="#">
+                                            <img src="
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                    {% if b.image_popular_blog %}{{ b.image_popular_blog.url }}{% else %}#{% endif %}"
+                                                 alt="Post Thumbnail"/></a>
+                                        </div>
+                                        <div class="widget-posts-body">
+                                            <div class="widget-posts-title"><a
+                                                    href="{% url 'blog' blog.slug %}">{{ b.title }}</a></div>
+                                            <div class="widget-posts-meta">{{ b.date_create|date:"D d M Y" }}</div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+
+                            </ul>
+                        </div>
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">Tag</h5>
+                            <div class="tags font-serif"><a href="#" rel="tag">Blog</a><a href="#"
+                                                                                          rel="tag">Photo</a><a
+                                    href="#" rel="tag">Video</a><a href="#" rel="tag">Image</a><a href="#"
+                                                                                                  rel="tag">Minimal</a><a
+                                    href="#" rel="tag">Post</a><a href="#" rel="tag">Theme</a><a href="#"
+                                                                                                 rel="tag">Ideas</a><a
+                                    href="#" rel="tag">Tags</a><a href="#" rel="tag">Bootstrap</a><a href="#"
+                                                                                                     rel="tag">Popular</a><a
+                                    href="#" rel="tag">English</a>
+                            </div>
+                        </div>
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">Text</h5>The languages only differ in their grammar,
+                            their
+                            pronunciation and their most common words. Everyone realizes why a new common language
+                            would
+                            be desirable: one could refuse to pay expensive translators.
+                        </div>
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">Recent Comments</h5>
+                            <ul class="icon-list">
+                                {% for recent_comment in recent_comments %}
+                                    <li>{{ recent_comment.author }} on <a
+                                            href="{% url 'blog' recent_comment.blog.slug %}">{{ recent_comment.blog.title }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-8 col-sm-offset-1">
+                        <div class="post">
+                            {% if blog.video %}
+                                <div class="post-video embed-responsive embed-responsive-16by9">
+                                    <iframe class="embed-responsive-item" src="{{ blog.video.url }}"
+                                            frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+                                </div>
+                            {% endif %}
+                            {% if blog.image %}
+                                <div class="post-images-slider">
+                                    <ul class="slides">
+                                        <li><img src="{{ blog.image.url }}" alt="Blog Slider Image"/></li>
+                                        {% if blog.image_2 %}
+                                            <li><img src="{{ blog.image_2.url }}" alt="Blog Slider Image"/></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                            <div class="post-header font-alt">
+                                <h2 class="post-title"><a href="{% url 'blog' blog.slug %}">{{ blog.title }}</a></h2>
+                                <div class="post-meta">By&nbsp;<a
+                                        href="{% url 'author' blog.author.id %}">{{ blog.author.get_full_name }}</a>| {{ blog.date_create|date:"D d M Y" }}
+                                    | {{ blog.count_comment }} Comments | {{ blog.category.all|join:"," }}
+                                </div>
+                                {% if request.user == blog.author  %}
+                                <a class="btn btn-round btn-b" href="{% url 'update_blog' blog.slug %}">Update</a>
+                                <a class="btn btn-round btn-danger" href="{% url 'del_blog' blog.slug %}">Delete</a>
+                                {% endif %}
+                            </div>
+                            <div class="post-entry">
+                                <p>{{ blog.text_story }}</p>
+                            </div>
+                        </div>
+                        <div class="comments">
+                            <h4 class="comment-title font-alt">There are {{ blog.count_comment }} comments</h4>
+                            <div class="comment clearfix">
+                                {% for comment in comments %}
+                                    {% if comment.is_parent %}
+                                        <div class="comment-avatar"><img
+                                                src="https://s3.amazonaws.com/uifaces/faces/twitter/ryanbattles/128.jpg"
+                                                alt="avatar"/></div>
+                                        <div class="comment-content clearfix">
+                                            <div class="comment-author font-alt"><a href="#">{{ comment.author }}</a>
+                                            </div>
+                                            <div class="comment-body">
+                                                <p>{{ comment.text_comment }}</p>
+                                            </div>
+                                            <div class="comment-meta font-alt">
+                                                {{ comment.time_ago }}
+                                                {% if request.user.is_authenticated and request.user.is_verified %}
+                                                    <button class="btn btn-ligh btn-sm"
+                                                            onclick="handleReply({{ comment.id }})">
+                                                        Reply
+                                                    </button>
+                                                {% else %}
+                                                    <p><a href="{% url 'login_register' %}" class="link-primary">Authenticated</a>, if you want to reply to a comment.</p>
+                                                {% endif %}
+                                                {% if request.user == comment.author  %}
+                                                  <a class="btn  btn-sm btn-b" href="{% url 'comment_update' comment.id %}">Edit</a>
+                                                  <a class="btn btn-sm btn-danger" href="{% url 'comment_del' comment.id %}">Delete</a>
+                                                {% endif %}
+                                                <div id="reply-form-container-{{ comment.id }}" style="display:none">
+
+                                                    <form method="post" action="{% url 'reply' %}" class="mt-3">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="blog_id" value="{{ blog.id }}">
+                                                        <input type="hidden" name="parent" value="{{ comment.id }}">
+                                                        <div class="form-group">
+                                                            {{ form.text_comment }}
+                                                        </div>
+                                                        <div>
+                                                            <button type="button"
+                                                                    onclick="handleCancel({{ comment.id }})"
+                                                                    class="btn btn-danger btn-sm">Cancel
+                                                            </button>
+                                                            <button type="submit" class="btn btn-ligh btn-sm">Submit
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% for child in comment.children %}
+                                        <div class="comment clearfix">
+                                            <div class="comment-avatar"><img
+                                                    src="https://s3.amazonaws.com/uifaces/faces/twitter/draganbabic/128.jpg"
+                                                    alt="avatar"/></div>
+                                            <div class="comment-content clearfix">
+                                                <div class="comment-author font-alt"><a
+                                                        href="#">{{ child.author }}</a></div>
+                                                <div class="comment-body">
+                                                    <p>{{ child.text_comment }}</p>
+                                                </div>
+                                                <div class="comment-meta font-alt">{{ child.time_ago }}
+                                                    {% if request.user == child.author  %}
+                                                  <a class="btn btn-sm btn-b" href="{% url 'comment_update' child.id %}">Edit</a>
+                                                  <a class="btn btn-sm btn-danger" href="{% url 'comment_del' child.id %}">Delete</a>
+                                                {% endif %}
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+
+                                {% endfor %}
+                            </div>
+                            {% if blog.count_comment  > 6 %}
+                                <div class="pagination ">
+                                    {% if comments.has_previous %}
+                                        <a href="{% url 'paginator_blog' blog.slug comments.previous_page_number %}">
+                                            <i class="fa fa-angle-left page-link"></i></a>
+                                    {% endif %}
+                                    {% for page in comments.paginator.page_range %}
+                                        <a class="{% if page == comments.number %}active{% endif %}"
+                                           href="{% url 'paginator_blog' blog.slug page %}">{{ page }}</a>
+                                    {% endfor %}
+                                    {% if comments.has_next %}
+                                        <a href="{% url 'paginator_blog' blog.slug comments.next_page_number %}">
+                                            <i class="fa fa-angle-right"></i></a>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                            {% if user.is_authenticated %}
+                                <div class="comment-form">
+                                    <h4 class="comment-form-title font-alt">Add your comment</h4>
+                                    <form method="post" action="{% url 'blog' blog.slug %}">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            {{ form.text_comment }}
+                                        </div>
+                                        <button class="btn btn-round btn-d" type="submit">Post comment</button>
+                                    </form>
+                                </div>
+                            {% else %}
+                                <h4 class="comment-form-title font-alt"><a href="{% url 'login_register' %}"
+                                                                           class="link-primary">Authenticated</a>, if
+                                    you need to add a comment.</h4>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="module-small bg-dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">About Titan</h5>
+                            <p>The languages only differ in their grammar, their pronunciation and their most common
+                                words.</p>
+                            <p>Phone: +1 234 567 89 10</p>Fax: +1 234 567 89 10
+                            <p>Email:<a href="#">somecompany@example.com</a></p>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">Recent Comments</h5>
+                            <ul class="icon-list">
+                                {% for recent_comment in recent_comments %}
+                                    <li>{{ recent_comment.author }} on <a
+                                            href="{% url 'blog' recent_comment.blog.slug %}">{{ recent_comment.blog.title }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">Blog Categories</h5>
+                            <ul class="icon-list">
+                                {% for category in categories %}
+                                    <li><a href="{% url 'category' category.id %}">{{ category.name }}
+                                        - {{ category.category_count }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">Popular Posts</h5>
+                            <ul class="widget-posts">
+                                {% for b in popular_blog_2 %}
+                                    <li class="clearfix">
+                                        <div class="widget-posts-image"><a href="#">
+                                            <img src="
+
+
+
+
+
+
+
+
+
+
+                                                    {% if b.image_popular_blog %}{{ b.image_popular_blog.url }}{% else %}#{% endif %}"
+                                                 alt="Post Thumbnail"/></a>
+                                        </div>
+                                        <div class="widget-posts-body">
+                                            <div class="widget-posts-title"><a
+                                                    href="{% url 'blog' blog.slug %}">{{ b.title }}</a></div>
+                                            <div class="widget-posts-meta">{{ b.date_create|date:"D d M Y" }}</div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="divider-d">
+        <footer class="footer bg-dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p class="copyright font-alt">&copy; 2017&nbsp;<a href="index.html">TitaN</a>, All Rights
+                            Reserved</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="footer-social-links"><a href="#"><i class="fa fa-facebook"></i></a><a
+                                href="#"><i
+                                class="fa fa-twitter"></i></a><a href="#"><i class="fa fa-dribbble"></i></a><a
+                                href="#"><i
+                                class="fa fa-skype"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+{% endblock %}

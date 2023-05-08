@@ -1,0 +1,219 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    Add new blog
+{% endblock %}
+
+{% block content %}
+    {% include 'blog/nav_bar.html' %}
+    <div class="main">
+        <section class="module-small">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4 col-md-3 sidebar">
+                        <div class="widget">
+                            <form role="form" method="get" action="{% url 'search' %}">
+                                <div class="search-box">
+                                    <input class="form-control" type="text" placeholder="Search..." name="q"/>
+                                    <button class="search-btn" type="submit"><i class="fa fa-search"></i></button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">Blog Categories</h5>
+                            <ul class="icon-list">
+                                {% for category in categories %}
+                                    <li><a href="{% url 'category' category.id %}">{{ category.name }}
+                                        - {{ category.category_count }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">Popular Posts</h5>
+                            <ul class="widget-posts">
+                                {% for b in popular_blog %}
+                                    <li class="clearfix">
+                                        <div class="widget-posts-image"><a href="#">
+                                            <img src="
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                    {% if b.image_popular_blog %}{{ b.image_popular_blog.url }}{% else %}#{% endif %}"
+                                                 alt="Post Thumbnail"/></a>
+                                        </div>
+                                        <div class="widget-posts-body">
+                                            <div class="widget-posts-title"><a
+                                                    href="{% url 'blog' b.slug %}">{{ b.title }}</a></div>
+                                            <div class="widget-posts-meta">{{ b.date_create|date:"D d M Y" }}</div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+
+                            </ul>
+                        </div>
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">Tag</h5>
+                            <div class="tags font-serif"><a href="#" rel="tag">Blog</a><a href="#"
+                                                                                          rel="tag">Photo</a><a
+                                    href="#" rel="tag">Video</a><a href="#" rel="tag">Image</a><a href="#"
+                                                                                                  rel="tag">Minimal</a><a
+                                    href="#" rel="tag">Post</a><a href="#" rel="tag">Theme</a><a href="#"
+                                                                                                 rel="tag">Ideas</a><a
+                                    href="#" rel="tag">Tags</a><a href="#" rel="tag">Bootstrap</a><a href="#"
+                                                                                                     rel="tag">Popular</a><a
+                                    href="#" rel="tag">English</a>
+                            </div>
+                        </div>
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">Text</h5>The languages only differ in their grammar,
+                            their
+                            pronunciation and their most common words. Everyone realizes why a new common language
+                            would
+                            be desirable: one could refuse to pay expensive translators.
+                        </div>
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">Recent Comments</h5>
+                            <ul class="icon-list">
+                                {% for recent_comment in recent_comments %}
+                                    <li>{{ recent_comment.author }} on <a
+                                            href="{% url 'blog' recent_comment.blog.slug %}">{{ recent_comment.blog.title }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-8 col-sm-offset-1">
+                        <form method="post" action="{% url 'add_blog' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                {{ form.title }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.text_story }}
+                            </div>
+                            <div class="form-group">
+                                <label class="small mb-1" for="{{ form.image.id_for_label }}">First image</label>
+                                {{ form.image }}
+                            </div>
+                            <div class="form-group">
+                                <label class="small mb-1" for="{{ form.image_2.id_for_label }}">Second image</label>
+                                {{ form.image_2 }}
+                            </div>
+                            <div class="form-group">
+                                <label class="small mb-1" for="{{ form.video.id_for_label }}">Video</label>
+                                {{ form.video }}
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label class="h5" for="{{ form.category.id_for_label }}"><strong>Category :</strong></label>
+                                {{ form.category }}
+                            </div>
+                            <button class="btn btn-round btn-b" type="submit">Add new blog</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="module-small bg-dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">About Titan</h5>
+                            <p>The languages only differ in their grammar, their pronunciation and their most common
+                                words.</p>
+                            <p>Phone: +1 234 567 89 10</p>Fax: +1 234 567 89 10
+                            <p>Email:<a href="#">somecompany@example.com</a></p>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">Recent Comments</h5>
+                            <ul class="icon-list">
+                                {% for recent_comment in recent_comments %}
+                                    <li>{{ recent_comment.author }} on <a
+                                            href="{% url 'blog' recent_comment.blog.slug %}">{{ recent_comment.blog.title }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">Blog Categories</h5>
+                            <ul class="icon-list">
+                                {% for category in categories %}
+                                    <li><a href="{% url 'category' category.id %}">{{ category.name }}
+                                        - {{ category.category_count }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">Popular Posts</h5>
+                            <ul class="widget-posts">
+                                {% for b in popular_blog_2 %}
+                                    <li class="clearfix">
+                                        <div class="widget-posts-image"><a href="#">
+                                            <img src="
+
+
+
+
+
+
+
+
+
+
+
+                                                    {% if b.image_popular_blog %}{{ b.image_popular_blog.url }}{% else %}#{% endif %}"
+                                                 alt="Post Thumbnail"/></a>
+                                        </div>
+                                        <div class="widget-posts-body">
+                                            <div class="widget-posts-title"><a
+                                                    href="{% url 'blog' b.slug %}">{{ b.title }}</a></div>
+                                            <div class="widget-posts-meta">{{ b.date_create|date:"D d M Y" }}</div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="divider-d">
+        <footer class="footer bg-dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p class="copyright font-alt">&copy; 2017&nbsp;<a href="index.html">TitaN</a>, All Rights
+                            Reserved</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="footer-social-links"><a href="#"><i class="fa fa-facebook"></i></a><a
+                                href="#"><i
+                                class="fa fa-twitter"></i></a><a href="#"><i class="fa fa-dribbble"></i></a><a
+                                href="#"><i
+                                class="fa fa-skype"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+{% endblock %}

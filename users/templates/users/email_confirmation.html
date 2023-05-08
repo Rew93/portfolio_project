@@ -1,0 +1,20 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block content %}
+    {% include 'blog/nav_bar.html' %}
+    <section class="module">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <h3>Thank you for your email ({{ user.email }}) is confirmation. Now you can <a href="{% url 'login_register' %}"
+                                                                              class="text-decoration-none">login</a>
+                        your account.</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

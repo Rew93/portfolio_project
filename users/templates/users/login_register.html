@@ -1,0 +1,170 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% load socialaccount %}
+{% block title %}
+    Login & Register
+{% endblock %}
+
+{% block content %}
+    {% include 'blog/nav_bar.html' %}
+    <div class="main">
+        <section class="module bg-dark-30" data-background="{% static 'assets/images/section-4.jpg' %}">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-3">
+                        <h1 class="module-title font-alt mb-0">Login-Register</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="module">
+            <div class="container">
+                <div class="row">
+                    {% include 'users/messages.html' %}
+                    <div class="col-sm-5 col-sm-offset-1 mb-sm-40">
+                        <h4 class="font-alt">Login</h4>
+                        <hr class="divider-w mb-10">
+                        <form class="form" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                {{ login_form.username }}
+                            </div>
+                            <div class="form-group">
+                                {{ login_form.password }}
+                            </div>
+                            <div class="form-group">
+                                {{ login_form.captcha }}
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-round btn-b" type="submit" name="login_form">Login</button>
+                                {% if user.is_authenticated %}
+                                    <a class="btn btn-round btn-b" href="{% url 'logout' %}">LOGOUT</a>
+                                {% else %}
+                                    <a class="btn btn-round btn-b" href="{% provider_login_url 'google' %}">Login with Google</a>
+                                {% endif %}
+                            </div>
+                        {% if user.is_authenticated %}
+                            <div class="form-group"><a href="{% url 'password_change' %}">Change password?</a></div>
+                        {% else %}
+                            <div class="form-group"><a href="{% url 'password_reset' %}">Forgot Password?</a></div>
+                        {% endif %}
+                        </form>
+                    </div>
+                    <div class="col-sm-5">
+                        <h4 class="font-alt">Register</h4>
+                        <hr class="divider-w mb-10">
+                        <form class="form" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                {{ register_form.email }}
+                            </div>
+                            <div class="form-group">
+                                {{ register_form.username }}
+                            </div>
+                            <div class="form-group">
+                                {{ register_form.first_name }}
+                            </div>
+                            <div class="form-group">
+                                {{ register_form.last_name }}
+                            </div>
+                            <div class="form-group">
+                                {{ register_form.password1 }}
+                            </div>
+                            <div class="form-group">
+                                {{ register_form.password2 }}
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-block btn-round btn-b" type="submit" name="register_form">
+                                    Register
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="module-small bg-dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">About Titan</h5>
+                            <p>The languages only differ in their grammar, their pronunciation and their most common
+                                words.</p>
+                            <p>Phone: +1 234 567 89 10</p>Fax: +1 234 567 89 10
+                            <p>Email:<a href="#">somecompany@example.com</a></p>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">Recent Comments</h5>
+                            <ul class="icon-list">
+                                {% for recent_comment in recent_comments %}
+                                    <li>{{ recent_comment.author }} on <a
+                                            href="{% url 'blog' recent_comment.blog.slug %}">{{ recent_comment.blog.title }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">Blog Categories</h5>
+                            <ul class="icon-list">
+                                {% for category in categories %}
+                                    <li><a href="{% url 'category' category.id %}">{{ category.name }}
+                                        - {{ category.category_count }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="widget">
+                            <h5 class="widget-title font-alt">Popular Posts</h5>
+                            <ul class="widget-posts">
+                                {% for blog in popular_blog_2 %}
+                                    <li class="clearfix">
+                                        <div class="widget-posts-image"><a href="#"><img src="
+
+
+
+
+
+
+                                                {% if blog.image_popular_blog %}{{ blog.image_popular_blog.url }}{% else %}#{% endif %}"
+                                                                                         alt="Post Thumbnail"/></a>
+                                        </div>
+                                        <div class="widget-posts-body">
+                                            <div class="widget-posts-title"><a
+                                                    href="{% url 'blog' blog.slug %}">{{ blog.title }}</a></div>
+                                            <div class="widget-posts-meta">{{ blog.date_create|date:"D d M Y" }}</div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="divider-d">
+        <footer class="footer bg-dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p class="copyright font-alt">&copy; 2017&nbsp;<a href="index.html">TitaN</a>, All Rights
+                            Reserved</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="footer-social-links"><a href="#"><i class="fa fa-facebook"></i></a><a href="#"><i
+                                class="fa fa-twitter"></i></a><a href="#"><i class="fa fa-dribbble"></i></a><a href="#"><i
+                                class="fa fa-skype"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+{% endblock %}
+
+
