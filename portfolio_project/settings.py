@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-s*aqb_v%y=aud0it3^)nqjpp8dn#f1=l6zjx@e-#jv5g@f3vw8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -46,8 +46,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 
     # My app
-    'blog',
     'users',
+    'blog',
+
 
     # Another app
     'captcha',
@@ -138,6 +139,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static/']
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # media urls
 
