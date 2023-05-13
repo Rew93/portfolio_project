@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # My app
     'users',
     'blog',
+    'portfolio'
 
 
     # Another app
