@@ -6,10 +6,11 @@ from users.models import UserModel
 
 # Create your models here.
 class CategoryModel(models.Model):
+    slug = models.SlugField(unique=True)
     name = models.CharField(max_length=150)
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.slug}'
 
     @property
     def category_count(self):
