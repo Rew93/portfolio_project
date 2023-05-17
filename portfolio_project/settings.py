@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'users',
     'blog',
     'portfolio',
+    'shop',
 
 
     # Another app
