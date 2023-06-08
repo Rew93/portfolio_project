@@ -1,0 +1,381 @@
+{% extends 'blog/base.html' %}
+{% load custom_filters %}
+{% block title %}
+    Product
+{% endblock %}
+{% block content %}
+    {% include 'blog/nav_bar.html' %}
+    <section class="module">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 mb-sm-40"><a class="gallery" href="{{ product.images.image_1.url }}"><img
+                        src="{{ product.images.image_1.url }}" alt="{{ product.images.describe_image }}"/></a>
+                    <ul class="product-gallery">
+                        <li><a class="gallery" href="{{ product.images.image_2.url }}"><img
+                                src="{{ product.images.image_2.url }}" alt="{{ product.images.describe_image }}"/></a></li>
+                        <li><a class="gallery" href="{{ product.images.image_3.url }}"><img
+                                src="{{ product.images.image_3.url }}" alt="{{ product.images.describe_image }}"/></a></li>
+                        <li><a class="gallery" href="{{ product.images.image_4.url }}"><img
+                                src="{{ product.images.image_4.url }}" alt="{{ product.images.describe_image }}"/></a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h1 class="product-title font-alt">{{ product.name }}</h1>
+                        </div>
+                    </div>
+                    <div class="row mb-20">
+                        <div class="col-sm-12">
+                            {% for i in 5|range_number %}
+                                {% if reviews.first.average_rating >= i %}
+                                    <span><i class="fa fa-star star"></i></span>
+                                {% else %}
+                                    <span><i class="fa fa-star star-off"></i></span>
+                                {% endif %}
+                            {% endfor %}
+                            <a class="open-tab section-scroll" href="#reviews">{{ reviews.first.count_review }}-customer
+                                reviews</a>
+                        </div>
+                    </div>
+                    <div class="row mb-20">
+                        <div class="col-sm-12">
+                            <div class="price font-alt"><span class="amount">£{{ product.price }}</span></div>
+                        </div>
+                    </div>
+                    <div class="row mb-20">
+                        <div class="col-sm-12">
+                            <div class="description">
+                                <p>{{ product.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-20">
+                        <div class="col-sm-4 mb-sm-20">
+                            <input class="form-control input-lg" type="number" name="" value="1" max="40" min="1"
+                                   required="required"/>
+                        </div>
+                        <div class="col-sm-8"><a class="btn btn-lg btn-block btn-round btn-b" href="{% url 'add_checkout' product.slug %}">Add To Cart</a>
+                        </div>
+                    </div>
+                    <div class="row mb-20">
+                        <div class="col-sm-12">
+                            <div class="product_meta">Categories:{% for category in product_categories %}
+                                <a href="#">{{ category }} </a>{% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-70">
+                <div class="col-sm-12">
+                    <ul class="nav nav-tabs font-alt" role="tablist">
+                        <li class="active"><a href="#description" data-toggle="tab"><span class="icon-tools-2"></span>Description</a>
+                        </li>
+                        <li><a href="#data-sheet" data-toggle="tab"><span class="icon-tools-2"></span>Data sheet</a>
+                        </li>
+                        <li><a href="#reviews" data-toggle="tab"><span class="icon-tools-2"></span>Reviews
+                            ({{ reviews.first.count_review }})</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="description">
+                            <p>{{ product.description }}</p>
+                        </div>
+                        <div class="tab-pane" id="data-sheet">
+                            <table class="table table-striped ds-table table-responsive">
+                                <tbody>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Info</th>
+                                </tr>
+                                <tr>
+                                    <td>Compositions</td>
+                                    <td>{{ product.compositions }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Size</td>
+                                    <td>{{ product.sizes.all|join:', ' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Color</td>
+                                    <td>{{ product.color }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Brand</td>
+                                    <td>{{ product.brand }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane" id="reviews">
+                            <div class="comments reviews">
+                                <div class="comment clearfix" id="review">
+                                    {% include 'users/messages.html' %}
+                                    {% for review in reviews %}
+                                        <div class="comment-avatar"><img src="{{ review.author.image.url }}"
+                                                                         alt="avatar"/></div>
+                                        <div class="comment-content clearfix">
+                                            <div class="comment-author font-alt"><a
+                                                    href="#">{{ review.author.get_full_name }}</a></div>
+                                            <div class="comment-body">
+                                                <p>{{ review.text_comment }}</p>
+                                                <p>
+                                                    {% if request.user == review.author %}
+                                                            <a href="{% url 'edit_product' product.slug review.id %}">Edit review</a>
+                                                        <button class="btn btn-ligh btn-sm"
+                                                                onclick="show_hide_form({{ review.id }})">
+                                                               Show
+                                                        </button>
+
+                                                    {% endif %}
+                                                </p>
+                                                <p>{% for i in 5|range_number %}
+                                                    {% if review.rating >= i %}
+                                                        <span><i class="fa fa-star star"></i></span>
+                                                    {% else %}
+                                                        <span><i class="fa fa-star star-off"></i></span>
+                                                    {% endif %}
+                                                {% endfor %}</p>
+                                            </div>
+                                            <div class="comment-meta font-alt">
+                                                {{ review.time_ago }}
+                                                {% if request.user.is_authenticated and request.user.is_verified %}
+                                                    {% if request.user == review.author %}
+                                                        <a class="btn btn-sm btn-danger"
+                                                           href="{% url 'delete_review' review.id %}">Delete review</a>
+                                                    {% endif %}
+                                                    <button class="btn btn-ligh btn-sm"
+                                                            onclick="handleReply({{ review.id }})">
+                                                        Reply
+                                                    </button>
+                                                    {% if review.children %}
+                                                        <button class="btn btn-ligh btn-sm"
+                                                                onclick="show_hide_text({{ review.id }})">
+                                                            Reply comments
+                                                        </button>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <p><a href="{% url 'login_register' %}" class="link-primary">Authenticated</a>,
+                                                        if you want to reply to a comment.</p>
+                                                {% endif %}
+                                                <div id="reply-form-container-{{ review.id }}"
+                                                     style="display:none">
+                                                    <br>
+
+                                                    <form method="post" action="{% url 'product' product.slug %}"
+                                                          class="mt-3">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="product_id"
+                                                               value="{{ product.id }}">
+                                                        <input type="hidden" name="parent_review"
+                                                               value="{{ review.id }}">
+                                                        <div class="form-group">
+                                                            {{ reply_form.text_comment }}
+                                                        </div>
+                                                        <div>
+                                                            <button type="button"
+                                                                    onclick="handleCancel({{ review.id }})"
+                                                                    class="btn btn-danger btn-sm">Cancel
+                                                            </button>
+                                                            <button type="submit" class="btn btn-ligh btn-sm" name="reply_form">Submit
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div id="AllReply-{{ review.id }}"
+                                                     style="display:none">
+                                                    <br>
+                                                    {% for child in review.children %}
+                                                        <div class="comment clearfix">
+                                                            <div class="comment-avatar"><img
+                                                                    src="{{ child.author.image.url }}"
+                                                                    alt="avatar"/></div>
+                                                            <div class="comment-content clearfix">
+                                                                <div class="comment-author font-alt"><a
+                                                                        href="#">{{ child.author }}</a></div>
+                                                                <div class="comment-body">
+                                                                    <p>{{ child.text_comment }}</p>
+                                                                </div>
+                                                                <div class="comment-meta font-alt">{{ child.time_ago }}
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                                <div id="review_edit-{{ review.id }}"
+                                                     style="display:none">
+                                                    <br>
+                                                    <form method="post" class="mt-3"
+                                                          action="{% url 'edit_product' product.slug review.id %}">
+                                                        {% csrf_token %}
+                                                        <div class="form-group">
+                                                            <h5>Choice you rating:</h5>
+                                                            {{ edit_form.rating }}
+                                                        </div>
+                                                        <div class="form-group">
+                                                            {{ edit_form.text_comment }}
+                                                        </div>
+                                                        <div>
+                                                            <button type="submit" class="btn btn-ligh btn-sm" name="edit_form">
+                                                                Save changes
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="comment-form mt-30">
+                                <h4 class="comment-form-title font-alt">Add review</h4>
+                                <form method="post" action="{% url 'product' product.slug %}">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <h5>Choice you rating:</h5>
+                                                {{ add_form.rating }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                {{ add_form.text_comment }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <button class="btn btn-round btn-d" type="submit" name="add_form">Submit Review</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {#    <hr class="divider-w">#}
+    {#    <section class="module-small">#}
+    {#        <div class="container">#}
+    {#            <div class="row">#}
+    {#                <div class="col-sm-6 col-sm-offset-3">#}
+    {#                    <h2 class="module-title font-alt">Related Products</h2>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#            <div class="row multi-columns-row">#}
+    {#                <div class="col-sm-6 col-md-3 col-lg-3">#}
+    {#                    <div class="shop-item">#}
+    {#                        <div class="shop-item-image"><img src="assets/images/shop/product-11.jpg"#}
+    {#                                                          alt="Accessories Pack"/>#}
+    {#                            <div class="shop-item-detail"><a class="btn btn-round btn-b"><span class="icon-basket">Add To Cart</span></a>#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                        <h4 class="shop-item-title font-alt"><a href="#">Accessories Pack</a></h4>£9.00#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#                <div class="col-sm-6 col-md-3 col-lg-3">#}
+    {#                    <div class="shop-item">#}
+    {#                        <div class="shop-item-image"><img src="assets/images/shop/product-12.jpg"#}
+    {#                                                          alt="Men’s Casual Pack"/>#}
+    {#                            <div class="shop-item-detail"><a class="btn btn-round btn-b"><span class="icon-basket">Add To Cart</span></a>#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                        <h4 class="shop-item-title font-alt"><a href="#">Men’s Casual Pack</a></h4>£12.00#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#                <div class="col-sm-6 col-md-3 col-lg-3">#}
+    {#                    <div class="shop-item">#}
+    {#                        <div class="shop-item-image"><img src="assets/images/shop/product-13.jpg" alt="Men’s Garb"/>#}
+    {#                            <div class="shop-item-detail"><a class="btn btn-round btn-b"><span class="icon-basket">Add To Cart</span></a>#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                        <h4 class="shop-item-title font-alt"><a href="#">Men’s Garb</a></h4>£6.00#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#                <div class="col-sm-6 col-md-3 col-lg-3">#}
+    {#                    <div class="shop-item">#}
+    {#                        <div class="shop-item-image"><img src="assets/images/shop/product-14.jpg" alt="Cold Garb"/>#}
+    {#                            <div class="shop-item-detail"><a class="btn btn-round btn-b"><span class="icon-basket">Add To Cart</span></a>#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                        <h4 class="shop-item-title font-alt"><a href="#">Cold Garb</a></h4>£14.00#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    </section>#}
+    {#    <hr class="divider-w">#}
+    {#    <section class="module">#}
+    {#        <div class="container">#}
+    {#            <div class="row">#}
+    {#                <div class="col-sm-6 col-sm-offset-3">#}
+    {#                    <h2 class="module-title font-alt">Exclusive products</h2>#}
+    {#                    <div class="module-subtitle font-serif">The languages only differ in their grammar, their#}
+    {#                        pronunciation#}
+    {#                        and their most common words.#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#            <div class="row">#}
+    {#                <div class="owl-carousel text-center" data-items="5" data-pagination="false" data-navigation="false">#}
+    {#                    <div class="owl-item">#}
+    {#                        <div class="col-sm-12">#}
+    {#                            <div class="ex-product"><a href="#"><img src="assets/images/shop/product-1.jpg"#}
+    {#                                                                     alt="Leather belt"/></a>#}
+    {#                                <h4 class="shop-item-title font-alt"><a href="#">Leather belt</a></h4>£12.00#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                    <div class="owl-item">#}
+    {#                        <div class="col-sm-12">#}
+    {#                            <div class="ex-product"><a href="#"><img src="assets/images/shop/product-3.jpg"#}
+    {#                                                                     alt="Derby shoes"/></a>#}
+    {#                                <h4 class="shop-item-title font-alt"><a href="#">Derby shoes</a></h4>£54.00#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                    <div class="owl-item">#}
+    {#                        <div class="col-sm-12">#}
+    {#                            <div class="ex-product"><a href="#"><img src="assets/images/shop/product-2.jpg"#}
+    {#                                                                     alt="Leather belt"/></a>#}
+    {#                                <h4 class="shop-item-title font-alt"><a href="#">Leather belt</a></h4>£19.00#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                    <div class="owl-item">#}
+    {#                        <div class="col-sm-12">#}
+    {#                            <div class="ex-product"><a href="#"><img src="assets/images/shop/product-4.jpg"#}
+    {#                                                                     alt="Leather belt"/></a>#}
+    {#                                <h4 class="shop-item-title font-alt"><a href="#">Leather belt</a></h4>£14.00#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                    <div class="owl-item">#}
+    {#                        <div class="col-sm-12">#}
+    {#                            <div class="ex-product"><a href="#"><img src="assets/images/shop/product-5.jpg"#}
+    {#                                                                     alt="Chelsea boots"/></a>#}
+    {#                                <h4 class="shop-item-title font-alt"><a href="#">Chelsea boots</a></h4>£44.00#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                    <div class="owl-item">#}
+    {#                        <div class="col-sm-12">#}
+    {#                            <div class="ex-product"><a href="#"><img src="assets/images/shop/product-6.jpg"#}
+    {#                                                                     alt="Leather belt"/></a>#}
+    {#                                <h4 class="shop-item-title font-alt"><a href="#">Leather belt</a></h4>£19.00#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    </section>#}
+    {% include 'blog/footer.html' %}
+{% endblock %}
+

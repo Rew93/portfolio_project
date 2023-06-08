@@ -57,6 +57,7 @@ class CommentsModel(models.Model):
     class Meta:
         ordering = ['-date_created']
 
+
     @property
     def children(self):
         return CommentsModel.objects.filter(parent=self).reverse()

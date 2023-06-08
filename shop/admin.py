@@ -1,7 +1,10 @@
+import random
+import string
+
 from django.contrib import admin
 
 from shop.models import ProductModel, ReviewModel, BrandModel, ImagesModel, CategoryProductModel, SizeGridModel, \
-    ProductSizeModel
+    ProductSizeModel, CouponCodeModel
 
 # Register your models here.
 admin.site.register(ImagesModel)
@@ -46,3 +49,20 @@ class ReviewAdmin(admin.ModelAdmin):
 class BrandAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     fields = ('name', 'slug')
+
+
+@admin.register(CouponCodeModel)
+class CouponCodeAdmin(admin.ModelAdmin):
+    fields = ('code', 'discount', 'date_expirations')
+    list_filter = ('discount',)
+    readonly_fields = ('date_create',)
+
+    @staticmethod
+    def generate_code(length=8):
+        letters_and_digits = string.ascii_letters + string.digits
+        return ''.join(random.choice(letters_and_digits) for _ in range(length))
+
+    def save_model(self, request, obj, form, change):
+        if not obj.code:
+            obj.code = self.generate_code()
+        super().save_model(request, obj, form, change)

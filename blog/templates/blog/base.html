@@ -54,6 +54,9 @@
     <!-- Main stylesheet and color file-->
     <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
     <link id="color-scheme" href="{% static 'assets/css/colors/default.css' %}" rel="stylesheet">
+    {% block style %}
+
+    {% endblock %}
 </head>
 <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
 <main>
@@ -81,5 +84,7 @@ JavaScripts
 <script src="{% static 'assets/js/plugins.js' %}"></script>
 <script src="{% static 'assets/js/main.js' %}"></script>
 <script src="{% static 'assets/js/my_func.js' %}"></script>
+{% block script %}
+{% endblock %}
 </body>
 </html>

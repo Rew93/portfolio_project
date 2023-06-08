@@ -36,3 +36,4 @@ uritemplate
 urllib3
 wheel
 flake8
+google-api-python-client

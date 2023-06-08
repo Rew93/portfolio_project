@@ -11,3 +11,22 @@ function handleCancel(response_id) {
         reply_form_container.style.display = 'none';
     }
 }
+
+function show_hide_text(id) {
+    const x = document.querySelector(`#AllReply-${id}`)
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+
+function show_hide_form(id) {
+    const x = document.querySelector(`#review_edit-${id}`)
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+

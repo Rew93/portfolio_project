@@ -6,121 +6,47 @@
 
 {% block content %}
     {% include 'blog/nav_bar.html' %}
-        <section class="module bg-dark-60 portfolio-page-header"
-                 data-background="{% static 'assets/images/portfolio/portfolio_header_bg.jpg' %}">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-6 col-sm-offset-3">
-                        <h2 class="module-title font-alt">Portfolio Boxed</h2>
-                        <div class="module-subtitle font-serif">A wonderful serenity has taken possession of my entire
-                            soul, like these sweet mornings of spring which I enjoy with my whole heart.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section class="module">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <ul class="filter font-alt" id="filters">
-                            <li><a class="current wow fadeInUp" href="#" data-filter="*">All</a></li>
-                            {% for category in categories %}
-                                <li><a class="wow fadeInUp" href="#" data-filter=".{{ category.slug }}"
-                                       data-wow-delay="0.2s">{{ category.name }}</a></li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-                <ul class="works-grid works-grid-gut works-hover-w" id="works-grid">
-                    {% for portfolio in portfolios %}
-                        <li class="work-item {{ portfolio.category.all|join:" " }}"><a href="{% url 'portfolio' portfolio.id %}">
-                            <div class="work-image"><img
-                                    src="{{ portfolio.image.url }}"
-                                    alt="Portfolio Item"/></div>
-                            <div class="work-caption font-alt">
-                                <h3 class="work-title">{{ portfolio.client }}</h3>
-                                <div class="work-descr">{{ portfolio.category.all|join:", " }}</div>
-                            </div>
-                        </a></li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </section>
-        <div class="module-small bg-dark">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-3">
-                        <div class="widget">
-                            <h5 class="widget-title font-alt">About Titan</h5>
-                            <p>The languages only differ in their grammar, their pronunciation and their most common
-                                words.</p>
-                            <p>Phone: +1 234 567 89 10</p>Fax: +1 234 567 89 10
-                            <p>Email:<a href="#">somecompany@example.com</a></p>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="widget">
-                            <h5 class="widget-title font-alt">Recent Comments</h5>
-                            <ul class="icon-list">
-                                {% for recent_comment in recent_comments %}
-                                    <li>{{ recent_comment.author }} on <a
-                                            href="{% url 'blog' recent_comment.blog.slug %}">{{ recent_comment.blog.title }}</a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="widget">
-                            <h5 class="widget-title font-alt">Blog Categories</h5>
-                            <ul class="icon-list">
-                                {% for category in categories %}
-                                    <li><a href="{% url 'category' category.id %}">{{ category.name }}
-                                        - {{ category.category_count }}</a></li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="widget">
-                            <h5 class="widget-title font-alt">Popular Posts</h5>
-                            <ul class="widget-posts">
-                                {% for blog in popular_blog_2 %}
-                                    <li class="clearfix">
-                                        <div class="widget-posts-image"><a href="#"><img src="
-
-                                                {% if blog.image_popular_blog %}{{ blog.image_popular_blog.url }}{% else %}#{% endif %}"
-                                                                                         alt="Post Thumbnail"/></a>
-                                        </div>
-                                        <div class="widget-posts-body">
-                                            <div class="widget-posts-title"><a
-                                                    href="{% url 'blog' blog.slug %}">{{ blog.title }}</a></div>
-                                            <div class="widget-posts-meta">{{ blog.date_create|date:"D d M Y" }}</div>
-                                        </div>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+    <section class="module bg-dark-60 portfolio-page-header"
+             data-background="{% static 'assets/images/portfolio/portfolio_header_bg.jpg' %}">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <h2 class="module-title font-alt">Portfolio Boxed</h2>
+                    <div class="module-subtitle font-serif">A wonderful serenity has taken possession of my entire
+                        soul, like these sweet mornings of spring which I enjoy with my whole heart.
                     </div>
                 </div>
             </div>
         </div>
-        <hr class="divider-d">
-        <footer class="footer bg-dark">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <p class="copyright font-alt">&copy; 2017&nbsp;<a href="index.html">TitaN</a>, All Rights
-                            Reserved</p>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="footer-social-links"><a href="#"><i class="fa fa-facebook"></i></a><a href="#"><i
-                                class="fa fa-twitter"></i></a><a href="#"><i class="fa fa-dribbble"></i></a><a href="#"><i
-                                class="fa fa-skype"></i></a>
-                        </div>
-                    </div>
+    </section>
+    <section class="module">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul class="filter font-alt" id="filters">
+                        <li><a class="current wow fadeInUp" href="#" data-filter="*">All</a></li>
+                        {% for category in categories %}
+                            <li><a class="wow fadeInUp" href="#" data-filter=".{{ category.slug }}"
+                                   data-wow-delay="0.2s">{{ category.name }}</a></li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
-        </footer>
+            <ul class="works-grid works-grid-gut works-hover-w" id="works-grid">
+                {% for portfolio in portfolios %}
+                    <li class="work-item {{ portfolio.category.all|join:" " }}"><a
+                            href="{% url 'portfolio' portfolio.id %}">
+                        <div class="work-image"><img
+                                src="{{ portfolio.image.url }}"
+                                alt="Portfolio Item"/></div>
+                        <div class="work-caption font-alt">
+                            <h3 class="work-title">{{ portfolio.client }}</h3>
+                            <div class="work-descr">{{ portfolio.category.all|join:", " }}</div>
+                        </div>
+                    </a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+    {% include 'blog/footer.html' %}
 {% endblock %}
